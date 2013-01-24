@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 public class ModifyDatabase {
     
-    //i am working
+    //i am working well
     private Connection connection;
     private Statement statement;
     private ResultSet resultSet;
