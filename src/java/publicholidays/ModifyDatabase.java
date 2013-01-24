@@ -30,7 +30,7 @@ public class ModifyDatabase {
         
         try{
             Class.forName("java.sql.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "Death Note");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "password");
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             query = "SELECT * FROM test.holidays;";
             resultSet = statement.executeQuery(query);
