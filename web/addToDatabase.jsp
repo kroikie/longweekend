@@ -1,5 +1,5 @@
 <%-- 
-    Document   : addToPage
+    Document   : addToDatabase
     Created on : Jan 16, 2013, 10:23:53 AM
     Author     : Jonathan
 --%>

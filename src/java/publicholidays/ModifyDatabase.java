@@ -8,10 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Jonathan
- */
+
 public class ModifyDatabase {
     
     private Connection connection;
@@ -30,7 +27,8 @@ public class ModifyDatabase {
         
         try{
             Class.forName("java.sql.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "password");
+            String pass = JOptionPane.showInputDialog(null, "Enter your password");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", pass);
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             query = "SELECT * FROM test.holidays;";
             resultSet = statement.executeQuery(query);
