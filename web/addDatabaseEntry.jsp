@@ -1,5 +1,5 @@
 <%-- 
-    Document   : SendData
+    Document   : addDatabaseEntry
     Created on : Jan 15, 2013, 7:25:44 PM
     Author     : Jonathan
 --%>
