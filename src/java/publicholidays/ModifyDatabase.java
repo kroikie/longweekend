@@ -1,13 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package publicholidays;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JOptionPane;
 
+//TODO: Make a method to deal with holidays that are TBA
+//TODO: Work on findLongWeekend Method
 
 public class ModifyDatabase {
     
@@ -16,12 +15,14 @@ public class ModifyDatabase {
     private Statement statement;
     private ResultSet resultSet;
     private String query;
-    private ArrayList<DatabaseEntry> database, pastHolidays, commingHolidays;
+    private ArrayList<DatabaseEntry> database, pastHolidays, comingHolidays;
     
     
     public ModifyDatabase(){
         openDatabase();
         getData();
+        //Not implemented so that as some holidays in 2013 have TBA
+        //sortData();
     }
     
     private void openDatabase(){
@@ -54,6 +55,25 @@ public class ModifyDatabase {
         }
     }//end getData
     
+    //Using Selection Sort to sort the database
+    private void sortData(){
+        
+        int indexOfEarliest;
+        for(int i = 0;i < database.size()-1;i++){
+            indexOfEarliest = i;
+            for(int j = i+1; j < database.size(); j++){
+                if(database.get(j).compareTo(database.get(indexOfEarliest)) < 0){
+                    indexOfEarliest = j;
+                }
+            }
+            
+            if( indexOfEarliest != i){
+                Collections.swap(database, i, indexOfEarliest);
+            }
+        }
+        
+    }//end sortData
+    
     public void addDatabaseEntry(String holidayName, String holidayDesc, String holidayDate, String alwaysOnSameDay){
         
         try{
@@ -77,19 +97,12 @@ public class ModifyDatabase {
     }//end addToDatabase
     
     public ArrayList<DatabaseEntry> getDatabase(){
-        return database;
+        final ArrayList<DatabaseEntry> copy = database;
+        return copy;
     }
-    
-    public ArrayList<DatabaseEntry> getPastHolidays(){
-        return  pastHolidays;
-    }
-    
-    public ArrayList<DatabaseEntry> getCommingHolidays(){
-        return commingHolidays;
-    }
+
     
     public void updateDatabaseEntry(String id, String holidayName, String holidayDesc, String holidayDate, String alwaysOnSameDay){
-        
         
         try{
             resultSet.close();
@@ -116,21 +129,37 @@ public class ModifyDatabase {
         
         boolean sameDay = false;
         pastHolidays = new ArrayList<DatabaseEntry>();
-        commingHolidays = new ArrayList<DatabaseEntry>();
+        comingHolidays = new ArrayList<DatabaseEntry>();
         
         for(DatabaseEntry d : database){
-            if(d.date.compareTo(holidayDate) < 0){
+            if(d.compareTo(holidayDate) < 0){
                 pastHolidays.add(d);
-            }else if(d.date.compareTo(holidayDate) == 0){
+            }else if(d.compareTo(holidayDate) == 0){
                 sameDay = true;
-            }else if(d.date.compareTo(holidayDate) >0){
-                commingHolidays.add(d);
+            }else if(d.compareTo(holidayDate) >0){
+                comingHolidays.add(d);
             }
         }
         
     }//end getHolidayListings
     
+    
+    private void findLongWeekend(){
+        
+    }//end findLongWeekend
+    
+    //These methods return a final copy of the database so that the original data can't be tampered with by the JSP
+    public ArrayList<DatabaseEntry> getPastHolidays(){
+        final ArrayList<DatabaseEntry> copy = pastHolidays;
+        return  copy;
+    }
+    
+    public ArrayList<DatabaseEntry> getComingHolidays(){
+        final ArrayList<DatabaseEntry> copy = comingHolidays;
+        return copy;
+    }   
 
+    
     private void closeDatabase() {
         try {
             connection.close();
@@ -141,34 +170,4 @@ public class ModifyDatabase {
         }
     }
     
-    private class DatabaseEntry implements Comparable<DatabaseEntry> {
-        private String desc, date, link;
-        private int alwaysOnSameDay;
-        
-        public DatabaseEntry(int id, String name, String desc, String date, int aosd){
-            update(id, name, desc, date, aosd);
-        }
-        
-        private void update(int id, String name, String desc, String date, int aosd) {
-            this.desc = desc;
-            this.date = date;
-            alwaysOnSameDay = aosd;
-            link = String.format(" <a href=\"editDataPage.jsp?id=%d&name=%s&desc=%s&date=%s&same_day=%d\">%s</a> ", 
-            id, name, desc, date, aosd, name);
-        }
-        
-        
-        @Override
-        public String toString(){
-            return String.format("Holiday Name: %s Holiday Desc: %s Holiday Date: %s AlwaysOnSameDay: %d", 
-                    link, desc, date, alwaysOnSameDay);
-        }
-
-        @Override
-        public int compareTo(DatabaseEntry d) {
-            return date.compareTo(d.date);
-        }
-            
-
-    }
 }

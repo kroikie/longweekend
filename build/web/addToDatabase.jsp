@@ -1,5 +1,5 @@
 <%-- 
-    Document   : addToPage
+    Document   : addToDatabase
     Created on : Jan 16, 2013, 10:23:53 AM
     Author     : Jonathan
 --%>
@@ -12,7 +12,7 @@
         <title>Add to Database</title>
     </head>
     <body>
-        <form action="SendData.jsp" method="GET">
+        <form action="addDatabaseEntry.jsp" method="GET">
             Holiday Name: <input type="text" name="name"/>
             Holiday Description: <input type="text" name="desc"/>
             Holiday Date: <input type="text" name="date"/>

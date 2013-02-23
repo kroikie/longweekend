@@ -22,12 +22,12 @@
         %>
         <script type="text/javascript">
             function addTo(){
-                window.location.href = "addToDatabase.jsp"
+                window.location.href = "addToDatabase.jsp";
             }
             
         </script>
         <form>
-            <input type="button" value ="Add to Database" onclick="addTo()">
+            <input type="button" value ="Add to Database" onclick="addTo();">
         </form>
         
         <form action="compareHolidays.jsp" method="GET">

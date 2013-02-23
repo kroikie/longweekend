@@ -29,8 +29,8 @@
             %>
             </b>
             <%
-            for(int i = 0; i < modifyDatabase.getCommingHolidays().size();i++){
-                out.print(modifyDatabase.getCommingHolidays().get(i)+"<br/>");
+            for(int i = 0; i < modifyDatabase.getComingHolidays().size();i++){
+                out.print(modifyDatabase.getComingHolidays().get(i)+"<br/>");
             }
         %>
     </body>
