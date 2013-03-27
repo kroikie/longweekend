@@ -15,8 +15,7 @@
     <body>
         <% 
             ModifyDatabase modifyDatabase = new ModifyDatabase();
-            modifyDatabase.updateDatabaseEntry(request.getParameter("id"), request.getParameter("name"), request.getParameter("desc"),
-                    request.getParameter("date"), request.getParameter("same_day"));
+            modifyDatabase.updateDatabaseEntry(request);
             response.sendRedirect("index.jsp");
         %>
     </body>

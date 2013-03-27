@@ -10,13 +10,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Data Sent</title>
+        <title>Add Database Entry</title>
     </head>
     <body>
         <% 
             ModifyDatabase modifyDatabase = new ModifyDatabase();
-            modifyDatabase.addDatabaseEntry(request.getParameter("name"), request.getParameter("desc"),
-                    request.getParameter("date"), request.getParameter("same_day"));
+            modifyDatabase.addDatabaseEntry(request);
             response.sendRedirect("index.jsp");
         %>
         

@@ -5,6 +5,7 @@
 --%>
 
 <%@page import="publicholidays.ModifyDatabase"%>
+<%@page import="publicholidays.DatabaseEntry"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,23 +16,17 @@
     <body>
         <%
             ModifyDatabase modifyDatabase = new ModifyDatabase();
-            
-            modifyDatabase.getHolidayListing(request.getParameter("yourDate"));
-            
-            for(int i = 0; i < modifyDatabase.getPastHolidays().size();i++){
-                out.print(modifyDatabase.getPastHolidays().get(i)+"<br/>");
+            modifyDatabase.setHolidayListing(request);
+            //modifyDatabase.printHolidaysListings(request, out);
+            modifyDatabase.findLongWeekend(request, out);
+         %>
+         <script type="text/javascript">
+            function gotoHome(){
+                window.location.href = "index.jsp";
             }
-            %>
-            
-            <b>
-            <%
-            out.print(String.format("Your Date %s <br/>", request.getParameter("yourDate")));
-            %>
-            </b>
-            <%
-            for(int i = 0; i < modifyDatabase.getComingHolidays().size();i++){
-                out.print(modifyDatabase.getComingHolidays().get(i)+"<br/>");
-            }
-        %>
+        </script>
+        <form>
+            <input type="button" value ="Home Page" onclick="gotoHome();">
+        </form>
     </body>
 </html>
