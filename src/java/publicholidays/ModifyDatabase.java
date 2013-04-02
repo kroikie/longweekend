@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +16,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.swing.JOptionPane;
 
 //TODO: Make modifications to deal with Entries that are TBA
-//TODO: Work on findLongWeekend Method
-//TODO: Work the implementations of findLongWeekend and printHolidayListings
+//TODO: Work on the implementations of findLongWeekend and printHolidayListings
+//TODO: Make a regular expression function to check if proper date is inputted from users
 
 public class ModifyDatabase extends HttpServlet {
     
@@ -99,8 +98,8 @@ public class ModifyDatabase extends HttpServlet {
     
     public void printDatabase(JspWriter out){
         try{
-            for(int i= 0; i< holidays.size(); i++)
-                out.print(holidays.get(i)+"<br/>");
+            for(DatabaseEntry d: holidays)
+                out.print(d+"<br/>");
         }catch(IOException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -144,10 +143,10 @@ public class ModifyDatabase extends HttpServlet {
         for(DatabaseEntry d : holidays){
             if(d.compareTo(yourDateEntry) < 0){
                 pastHolidays.add(d);
-            }else if(d.compareTo(yourDateEntry) == 0){
-                //Need to work on if the date is the same as a holiday
-                sameDay = true;
-            }else if(d.compareTo(yourDateEntry) >0){
+           // }else if(d.compareTo(yourDateEntry) == 0){
+           //     //Need to work on if the date is the same as a holiday
+           //     sameDay = true;
+            }else if(d.compareTo(yourDateEntry) >= 0){
                 comingHolidays.add(d);
             }
             
@@ -159,12 +158,12 @@ public class ModifyDatabase extends HttpServlet {
     public void printHolidaysListings(HttpServletRequest request, JspWriter out){
         try{
             out.print("<b>");
-            for(int i = 0; i < pastHolidays.size();i++){
-                out.print(pastHolidays.get(i)+"<br/>");
+            for(DatabaseEntry d: pastHolidays){
+                out.print(d+"<br/>");
             }
             out.print(String.format("Your Date %s <br/>", request.getParameter("yourDate")));
-            for(int i = 0; i < comingHolidays.size();i++){
-                out.print(comingHolidays.get(i)+"<br/>");
+            for(DatabaseEntry d: comingHolidays){
+                out.print(d+"<br/>");
             }
             out.print("</b>");
         }catch(IOException e){
@@ -175,8 +174,8 @@ public class ModifyDatabase extends HttpServlet {
     
     
     /*Pseudocode for findLongWeekend
-     * while there still more holidays in comingHlidays
-     * if the next day is a public holiday or saturday or sunday
+     * while there still more holidays in comingHolidays
+     * if the next day is a public holiday or saturday or sunday or monday after sunday holiday
      * mark date or probably print it highlighted
      * end if
      * end while
@@ -184,11 +183,16 @@ public class ModifyDatabase extends HttpServlet {
     public void findLongWeekend(HttpServletRequest request, JspWriter out){
         try{
             DatabaseEntry current = new DatabaseEntry(request.getParameter("yourDate"));
-            //Need to work on this printing the correct name of the holiday if it is an actual holiday
             do{
-                out.print("*"+current+"*<br/>");
+                for(DatabaseEntry d: comingHolidays){
+                    if(d.compareTo(current)==0){
+                        current = d;
+                        break;
+                    } 
+                }
+                out.print(current+"<br/>");
                 current = current.nextDatabaseEntry();
-            }while(isHoliday(current) || isWeekendDay(current));
+            }while(isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current));
             
         }catch(IOException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -197,22 +201,35 @@ public class ModifyDatabase extends HttpServlet {
 
     
     private boolean isHoliday(DatabaseEntry d){
-        for(DatabaseEntry i: comingHolidays){
-            if(i.compareTo(d)==0){
+       
+        for(DatabaseEntry current: comingHolidays){
+            if(current.compareTo(d)==0)
                 return true;
-            }
         }
         return false;
-    }
+    }//end isHoliday
     
-    private boolean isWeekendDay(DatabaseEntry d){
-        //Subtract 1 from the Month to accomodate for the months starting from 0
-        Calendar x = new GregorianCalendar(d.getYear(), d.getMonth()-1, d.getDay());
-        if(x.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY|| x.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+    private boolean isWeekend(DatabaseEntry d){
+         //Subtract 1 from the Month to accommodate for the months starting from 0
+        GregorianCalendar x = d.toGregorianCalendar();
+        if(x.get(GregorianCalendar.DAY_OF_WEEK)==GregorianCalendar.SATURDAY|| x.get(GregorianCalendar.DAY_OF_WEEK)==GregorianCalendar.SUNDAY){
             return true; 
         }
         return false;
-    }
+    }//end isWeekend
+    
+    private boolean isMondayAfterHoliday(DatabaseEntry d){
+        if(!isHoliday(d.previousDatabaseEntry()))
+            return false;
+        
+        GregorianCalendar previousDay = d.previousDatabaseEntry().toGregorianCalendar();
+        GregorianCalendar day = d.toGregorianCalendar();
+        if(previousDay.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SUNDAY 
+                && day.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.MONDAY){
+            return true;
+        }
+        return false;
+    }//end isMondayAfterHoliday
     
     
     private void closeDatabase() {
@@ -223,6 +240,6 @@ public class ModifyDatabase extends HttpServlet {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
-    }
+    }//end closeDatabase
     
 }
