@@ -1,15 +1,16 @@
 <%-- 
-    Document   : editData
+    Document   : editDataPage
     Created on : Jan 16, 2013, 5:23:29 PM
     Author     : Jonathan
 --%>
 
+<%@page import="publicholidays.ModifyDatabase"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Update Entry</title>
+        <title>Update Database Entry</title>
     </head>
     <body>
         <form action="updateData.jsp" method="GET">

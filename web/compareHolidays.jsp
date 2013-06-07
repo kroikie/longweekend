@@ -4,7 +4,8 @@
     Author     : Jonathan
 --%>
 
-<%@page import="publicholidays.Database"%>
+<%@page import="publicholidays.ModifyDatabase"%>
+<%@page import="publicholidays.DatabaseEntry"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,9 +15,10 @@
     </head>
     <body>
         <%
-            Database database = new Database();
-            database.setListings(request);
-            database.findLongWeekend(request, out);
+            ModifyDatabase modifyDatabase = new ModifyDatabase();
+            modifyDatabase.setHolidayListing(request);
+            //modifyDatabase.printHolidaysListings(request, out);
+            modifyDatabase.findLongWeekend(request, out);
          %>
          <script type="text/javascript">
             function gotoHome(){

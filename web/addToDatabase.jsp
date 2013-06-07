@@ -12,7 +12,7 @@
         <title>Add to Database</title>
     </head>
     <body>
-        <form action="addEntry.jsp" method="GET">
+        <form action="addDatabaseEntry.jsp" method="GET">
             Holiday Name: <input type="text" name="name"/>
             Holiday Description: <input type="text" name="desc"/>
             Holiday Date: <input type="text" name="date"/>

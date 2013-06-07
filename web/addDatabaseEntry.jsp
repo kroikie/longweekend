@@ -1,6 +1,6 @@
 <%-- 
-    Document   : updateData
-    Created on : Jan 16, 2013, 8:54:49 PM
+    Document   : addDatabaseEntry
+    Created on : Jan 15, 2013, 7:25:44 PM
     Author     : Jonathan
 --%>
 
@@ -10,13 +10,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Update Data</title>
+        <title>Add Database Entry</title>
     </head>
     <body>
         <% 
             ModifyDatabase modifyDatabase = new ModifyDatabase();
-            modifyDatabase.updateDatabaseEntry(request);
+            modifyDatabase.addDatabaseEntry(request);
             response.sendRedirect("index.jsp");
         %>
+        
     </body>
 </html>
