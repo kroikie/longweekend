@@ -99,6 +99,7 @@ public class Database {
                     out.print(current+"<br/>");//Print secondd clashing day
                     current = current.nextDate();
                     current.setHolidayName("Honorary Date");
+                    current.setHolidayDesc("Honorary Date");
                     out.print(current+"<br/>");//Print the day after
                     current = current.nextDate();
                     continue;
@@ -130,6 +131,7 @@ public class Database {
                 DateEntry next = (DateEntry)collision.get(2);
                 current = next.nextDate();
                 current.setHolidayName("Honorary Date");
+                current.setHolidayDesc("Honorary Date");
                 longweekend.add(current);
                 current = current.nextDate();
                 continue;

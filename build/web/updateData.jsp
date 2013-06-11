@@ -4,7 +4,7 @@
     Author     : Jonathan
 --%>
 
-<%@page import="publicholidays.ModifyDatabase"%>
+<%@page import="publicholidays.Database"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,9 +14,10 @@
     </head>
     <body>
         <% 
-            ModifyDatabase modifyDatabase = new ModifyDatabase();
-            modifyDatabase.updateDatabaseEntry(request);
+            Database database = new Database();
+            database.update(request);
             response.sendRedirect("index.jsp");
+            
         %>
     </body>
 </html>

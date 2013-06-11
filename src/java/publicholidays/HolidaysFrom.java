@@ -20,7 +20,7 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-@WebServlet(name = "HolidaysFrom", urlPatterns = {"/Holi8daysFrom"})
+@WebServlet(name = "HolidaysFrom", urlPatterns = {"/HolidaysFrom"})
 public class HolidaysFrom extends HttpServlet {
 
     /**

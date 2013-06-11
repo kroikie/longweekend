@@ -4,8 +4,7 @@
     Author     : Jonathan
 --%>
 
-<%@page import="publicholidays.DatabaseEntry"%>
-<%@page import="publicholidays.ModifyDatabase"%>
+<%@page import="publicholidays.Database"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -16,8 +15,8 @@
     <body>
         
         <% 
-            ModifyDatabase modifyDatabase = new ModifyDatabase();
-            modifyDatabase.printDatabase(out);
+            Database database = new Database();
+            database.print(out);
         %>
         <script type="text/javascript">
             function addTo(){
