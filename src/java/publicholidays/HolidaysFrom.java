@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package publicholidays;
 
 import entity.DateEntry;
@@ -10,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +15,6 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-@WebServlet(name = "HolidaysFrom", urlPatterns = {"/HolidaysFrom"})
 public class HolidaysFrom extends HttpServlet {
 
     /**
@@ -39,7 +33,7 @@ public class HolidaysFrom extends HttpServlet {
         PrintWriter out = response.getWriter();
         DateEntry start = new DateEntry(request.getParameter("startDate"));
         Database database = new Database();
-        List<DateEntry> list = database.getList();
+        List<DateEntry> list = database.getHolidays();
         List<DateEntry> holidaysFrom = new ArrayList<DateEntry>();
         try {
             for(DateEntry d: list){

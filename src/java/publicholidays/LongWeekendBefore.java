@@ -1,6 +1,5 @@
 package publicholidays;
 
-import entity.DateEntry;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,7 +13,7 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-public class LongWeekend extends HttpServlet {
+public class LongWeekendBefore extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -30,17 +29,15 @@ public class LongWeekend extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        Database database = new Database();
-        
         try {
-            List<DateEntry> list = database.findLongWeekend(request);
-            JSONArray jsonArray = new JSONArray(list);
-            jsonArray.write(out);
+            Database database = new Database();
+            List list = database.findlongWeekendBefore(request);
+            JSONArray jsonAray = new JSONArray(list);
+            jsonAray.write(out);
         } finally {            
             out.close();
         }
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -82,8 +79,4 @@ public class LongWeekend extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    
-    
-   
 }

@@ -4,11 +4,12 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entity.DateEntry</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/longweekend"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.password" value="Death Note"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>
   </persistence-unit>
 </persistence>

@@ -1,4 +1,3 @@
-
 package publicholidays;
 
 import entity.DateEntry;
@@ -7,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +15,6 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-@WebServlet(name = "HolidaysBetween", urlPatterns = {"/HolidaysBetween"})
 public class HolidaysBetween extends HttpServlet {
 
     /**
@@ -37,7 +34,7 @@ public class HolidaysBetween extends HttpServlet {
         DateEntry start = new DateEntry(request.getParameter("startDate"));
         DateEntry end = new DateEntry(request.getParameter("endDate"));
         Database database = new Database();
-        List<DateEntry> list = database.getList();
+        List<DateEntry> list = database.getHolidays();
         List<DateEntry> holidaysBetween = new ArrayList<DateEntry>();
         try {
             for(DateEntry d: list){

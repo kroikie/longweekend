@@ -42,10 +42,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     public DateEntry() {
     }
-
-    public DateEntry(Integer id) {
-        this.id = id;
-    }
     
     public DateEntry(int id, String name, String desc, String date, int aosd){
         this.id = id;
@@ -217,7 +213,7 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
             return false;
         }
         DateEntry other = (DateEntry) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.holidayDate == null && other.holidayDate != null) || (this.holidayDate != null && !this.holidayDate.equals(other.holidayDate))) {
             return false;
         }
         return true;

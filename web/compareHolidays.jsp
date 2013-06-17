@@ -15,7 +15,6 @@
     <body>
         <%
             Database database = new Database();
-            database.setListings(request);
             database.findLongWeekend(request, out);
          %>
          <script type="text/javascript">

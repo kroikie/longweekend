@@ -30,7 +30,7 @@
         
         <form action="compareHolidays.jsp" method="GET">
             <br/>Enter the information in the following format: YYYY-MM-DD
-            <br/><input type="text" name="yourDate"/>
+            <br/><input type="text" name="startDate"/>
             <input type="submit" value="Check for closest holidays"/>
         </form>
     </body>
