@@ -131,6 +131,18 @@ public class Database {
         while (!current.getHolidayDate().equals(endDate)) {
             List<DateEntry> longweekend = new ArrayList<DateEntry>();
             while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current)) {
+                ArrayList<Object> collision = isHolidayColliding(current);
+                if ((Boolean) collision.get(0)) {
+                    longweekend.add((DateEntry) collision.get(1));//Add the first colliding date
+                    longweekend.add((DateEntry) collision.get(2));//Add the second colliding date
+                    DateEntry next = (DateEntry) collision.get(2);
+                    current = next.nextDate();//Get the next date to modify 
+                    current.setHolidayName("Honorary Date");
+                    current.setHolidayDesc("Honorary Date");
+                    longweekend.add(current);
+                    current = current.nextDate();
+                    continue;
+                }
                 for (DateEntry d : holidays) {
                     if (d.getHolidayDate().equals(current.getHolidayDate())) {
                         current = d;
