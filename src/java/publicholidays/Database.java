@@ -35,7 +35,7 @@ public class Database {
         DateEntry toAdd = new DateEntry(holidays.size(), request.getParameter("name"),
                 request.getParameter("desc"), request.getParameter("date"), Integer.parseInt(request.getParameter("same_day")));
         persist(toAdd);
-    }
+    }//end add
 
     public void update(HttpServletRequest request) {
         DateEntry update = holidays.get(Integer.parseInt(request.getParameter("id")) - 1);
@@ -128,7 +128,7 @@ public class Database {
         List<List<DateEntry>> allLongWeekends = new ArrayList<List<DateEntry>>();
         DateEntry current = new DateEntry(request.getParameter("startDate"));
         String endDate = request.getParameter("endDate");
-        while (!current.getHolidayDate().equals(endDate)) {
+        while (current.getHolidayDate().compareTo(endDate) <= 0) {
             List<DateEntry> longweekend = new ArrayList<DateEntry>();
             while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current)) {
                 ArrayList<Object> collision = isHolidayColliding(current);
@@ -244,5 +244,5 @@ public class Database {
             return false;
         }
         return false;
-    }
+    }//end isOnlyWeekend
 }
