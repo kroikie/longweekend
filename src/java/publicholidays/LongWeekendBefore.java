@@ -31,8 +31,8 @@ public class LongWeekendBefore extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             Database database = new Database();
-            List list = database.findlongWeekendBefore(request);
-            JSONArray jsonAray = new JSONArray(list);
+            List longWeekendBefore = database.findlongWeekendBefore(request);
+            JSONArray jsonAray = new JSONArray(longWeekendBefore);
             jsonAray.write(out);
         } finally {            
             out.close();
