@@ -17,6 +17,9 @@ import javax.swing.JOptionPane;
 
 public class Database {
 
+    public final static int LONG_WEEKEND_BEFORE = 0;
+    public final static int LONG_WEEKEND_AFTER = 1;
+    
     private EntityManager entityManger;
     private List<DateEntry> holidays;
 
@@ -59,18 +62,6 @@ public class Database {
     }//end print
 
     public void findLongWeekend(HttpServletRequest request, JspWriter out) {
-        try {
-            List<DateEntry> longweekend = findLongWeekend(request);
-            for (DateEntry date : longweekend) {
-                out.print(date + "<br/>");
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-
-    }//end findLongWeekend
-
-    public List findLongWeekend(HttpServletRequest request) {
         /*Pseudocode for findLongWeekend
          * while there still more holidays in comingHolidays
          * if the next day is a public holiday or saturday or Sunday or Monday after Sunday holiday
@@ -78,54 +69,39 @@ public class Database {
          * else if the holidays collides skip the next day as it will be a holiday
          * end if
          * end while
-         */
-        ArrayList<DateEntry> longweekend = new ArrayList<DateEntry>();
-        DateEntry current = new DateEntry(request.getParameter("startDate"));
-        do {
-            ArrayList<Object> collision = isHolidayColliding(current);
-            if ((Boolean) collision.get(0)) {
-                longweekend.add((DateEntry) collision.get(1));//Add the first colliding date
-                longweekend.add((DateEntry) collision.get(2));//Add the second colliding date
-                DateEntry next = (DateEntry) collision.get(2);
-                current = next.nextDate();//Get the next date to modify 
-                current.setHolidayName("Honorary Date");
-                current.setHolidayDesc("Honorary Date");
-                longweekend.add(current);
-                current = current.nextDate();
-                continue;
-            }
-            for (DateEntry d : holidays) {
-                if (d.getHolidayDate().equals(current.getHolidayDate())) {
-                    current = d;
-                    break;
+         */        
+        try {
+            DateEntry current = new DateEntry(request.getParameter("startDate"));
+            do {
+                ArrayList<Object> collision = isHolidayColliding(current);
+                if ((Boolean) collision.get(0)) {
+                    //Print the colliding dates
+                    out.print((DateEntry) collision.get(1) + "</br>");
+                    out.print((DateEntry) collision.get(2) + "</br>");
+                    DateEntry next = (DateEntry) collision.get(2);
+                    current = next.nextDate();//Get the next date to modify 
+                    current.setHolidayName("Honorary Date");
+                    current.setHolidayDesc("Honorary Date");
+                    out.print(current + "</br>");
+                    current = current.nextDate();
+                    continue;
                 }
-            }
-            longweekend.add(current);
-            current = current.nextDate();
-        } while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current));
+                for (DateEntry d : holidays) {
+                    if (d.getHolidayDate().equals(current.getHolidayDate())) {
+                        current = d;
+                        break;
+                    }
+                }
+                    out.print(current + "</br>");
+                    current = current.nextDate();
+            } while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current));
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
 
-        return longweekend;
     }//end findLongWeekend
 
-    public List findlongWeekendBefore(HttpServletRequest request) {
-        List<List<DateEntry>> longweekends = longweekend(request);
-        return longweekends.get(longweekends.size() - 1);
-    }//end findLongWeekendBefore
-
-    public List findLongWeekendAfter(HttpServletRequest request) {
-        List<List<DateEntry>> longweekends = longweekend(request);
-        return longweekends.get(0);
-    }//end findLongWeekendAfter
-
-    //Priavte Methods
-    private void persist(DateEntry d) {
-        entityManger.getTransaction().begin();
-        entityManger.persist(d);
-        entityManger.getTransaction().commit();
-        entityManger.close();
-    }//end persist
-
-    private List<List<DateEntry>> longweekend(HttpServletRequest request) {
+    public List findLongWeekend(HttpServletRequest request, int selector) {
         List<List<DateEntry>> allLongWeekends = new ArrayList<List<DateEntry>>();
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
@@ -171,8 +147,27 @@ public class Database {
                 allLongWeekends.add(longweekend);
             }
         }
-        return allLongWeekends;
-    }//end longweekend
+        
+        if(true)
+            return allLongWeekends;
+        
+        switch(selector){
+            case LONG_WEEKEND_BEFORE:
+                return allLongWeekends.get(0);
+            case LONG_WEEKEND_AFTER:
+                return allLongWeekends.get(allLongWeekends.size()-1);
+             default:
+                 return Collections.EMPTY_LIST;
+        }
+    }//end findLongWeekend
+
+    //Priavte Methods
+    private void persist(DateEntry d) {
+        entityManger.getTransaction().begin();
+        entityManger.persist(d);
+        entityManger.getTransaction().commit();
+        entityManger.close();
+    }//end persist
 
     private boolean isHoliday(DateEntry d) {
         return holidays.contains(d);

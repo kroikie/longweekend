@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <servlet>
-        <servlet-name>LongWeekend</servlet-name>
-        <servlet-class>publicholidays.LongWeekend</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>HolidaysFrom</servlet-name>
         <servlet-class>publicholidays.HolidaysFrom</servlet-class>
     </servlet>
@@ -20,10 +16,6 @@
         <servlet-name>LongWeekendAfter</servlet-name>
         <servlet-class>publicholidays.LongWeekendAfter</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>LongWeekend</servlet-name>
-        <url-pattern>/LongWeekend</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HolidaysFrom</servlet-name>
         <url-pattern>/HolidaysFrom</url-pattern>
