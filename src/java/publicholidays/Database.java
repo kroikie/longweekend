@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -62,43 +62,16 @@ public class Database {
     }//end print
 
     public void findLongWeekend(HttpServletRequest request, JspWriter out) {
-        /*Pseudocode for findLongWeekend
-         * while there still more holidays in comingHolidays
-         * if the next day is a public holiday or saturday or Sunday or Monday after Sunday holiday
-         * print it
-         * else if the holidays collides skip the next day as it will be a holiday
-         * end if
-         * end while
-         */        
-        try {
-            DateEntry current = new DateEntry(request.getParameter("startDate"));
-            do {
-                ArrayList<Object> collision = isHolidayColliding(current);
-                if ((Boolean) collision.get(0)) {
-                    //Print the colliding dates
-                    out.print((DateEntry) collision.get(1) + "</br>");
-                    out.print((DateEntry) collision.get(2) + "</br>");
-                    DateEntry next = (DateEntry) collision.get(2);
-                    current = next.nextDate();//Get the next date to modify 
-                    current.setHolidayName("Honorary Date");
-                    current.setHolidayDesc("Honorary Date");
-                    out.print(current + "</br>");
-                    current = current.nextDate();
-                    continue;
-                }
-                for (DateEntry d : holidays) {
-                    if (d.getHolidayDate().equals(current.getHolidayDate())) {
-                        current = d;
-                        break;
-                    }
-                }
-                    out.print(current + "</br>");
-                    current = current.nextDate();
-            } while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current));
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+        SpecialHttpServletRequest newRequest = new SpecialHttpServletRequest(request);
+        newRequest.addParameter("endDate", "2013-12-31");
+        List<DateEntry> longweekend = findLongWeekend(newRequest, LONG_WEEKEND_AFTER);
+        for(DateEntry d: longweekend){
+            try {
+                out.print(d + "<br/>");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         }
-
     }//end findLongWeekend
 
     public List findLongWeekend(HttpServletRequest request, int selector) {
@@ -118,9 +91,8 @@ public class Database {
         //Remove duplicates due to the proximity of some holidays to each other
         toTraverse = removeDuplicates(toTraverse);
         
-        for(int i = 0; i < toTraverse.size(); i++){
+        for(DateEntry current: toTraverse){
             List<DateEntry> longweekend = new ArrayList<DateEntry>();
-            DateEntry current = toTraverse.get(i);
             while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current)) {
                 ArrayList<Object> collision = isHolidayColliding(current);
                 if ((Boolean) collision.get(0)) {
@@ -148,16 +120,13 @@ public class Database {
             }
         }
         
-        if(true)
-            return allLongWeekends;
-        
         switch(selector){
             case LONG_WEEKEND_BEFORE:
                 return allLongWeekends.get(0);
             case LONG_WEEKEND_AFTER:
                 return allLongWeekends.get(allLongWeekends.size()-1);
-             default:
-                 return Collections.EMPTY_LIST;
+            default:
+                return Collections.EMPTY_LIST;
         }
     }//end findLongWeekend
 
@@ -247,20 +216,19 @@ public class Database {
         if(date.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.SUNDAY)
             return d.previousDate();//Set the date to the saturday
         else if(date.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.MONDAY)
-            return d.previousDate();//Set the date to the saturdya
+            return d.previousDate().previousDate();//Set the date to the saturday
         return d;//Tuesday-Saturday
     }//end getStartDate
     
     private List<DateEntry> removeDuplicates(List<DateEntry> list){
         //Conver the list to a map which can only have one copy of a key
         //holidayDate is used since it the property that indicates a duplicate
-        HashMap<String, DateEntry> map = new HashMap<String, DateEntry>();
+        TreeMap<String, DateEntry> map = new TreeMap<String, DateEntry>();
         for(DateEntry d: list){
             map.put(d.getHolidayDate(), d);
         }
         //Convert the map back to a list to be used
         List<DateEntry> newList = new ArrayList<DateEntry>(map.values());
-        Collections.sort(newList);
         return newList;
     }//end removeDuplicates
 }
