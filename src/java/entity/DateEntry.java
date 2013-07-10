@@ -39,6 +39,8 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
     private Integer alwaysOnSameDay;
     private transient String link;
 
+    public transient static final int ALWAYS_ON_SAME_DAY = 1;
+    
     public DateEntry() {
     }
 
@@ -157,6 +159,11 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
         String next = String.format("%d-%02d-%02d", year, month, day);
         return new DateEntry(next);
+    }
+    
+    public DateEntry nextYear() {
+        String date = String.format("%d-%02d-%02d", getYear()+1, getMonth(), getDay());
+        return new DateEntry(id, holidayName, holidayDesc, date, alwaysOnSameDay);
     }
 
     public GregorianCalendar toGregorianCalendar() {

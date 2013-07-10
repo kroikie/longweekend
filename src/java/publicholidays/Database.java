@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
 
 public class Database {
 
-    public final static int LONG_WEEKEND_BEFORE = 0;
-    public final static int LONG_WEEKEND_AFTER = 1;
+    public static final int LONG_WEEKEND_BEFORE = 0;
+    public static final int LONG_WEEKEND_AFTER = 1;
     
     private EntityManager entityManger;
     private List<DateEntry> holidays;
@@ -28,18 +28,31 @@ public class Database {
         entityManger = factory.createEntityManager();
         Query query = entityManger.createNamedQuery("DateEntry.findAll", DateEntry.class);
         holidays = query.getResultList();
+        
+        //Modifing the list to add the hoidays that are on the same day each year
+        List<DateEntry> nextYearHolidays = new ArrayList<DateEntry>(), 
+                yearAfterNextHolidays = new ArrayList<DateEntry>();
+        for(DateEntry d: holidays){
+            if(d.getAlwaysOnSameDay() == DateEntry.ALWAYS_ON_SAME_DAY){
+                DateEntry nextYearVersion = d.nextYear();
+                nextYearHolidays.add(nextYearVersion);
+                yearAfterNextHolidays.add(nextYearVersion.nextYear());
+            }
+        }
+        holidays.addAll(nextYearHolidays);
+        holidays.addAll(yearAfterNextHolidays);
     }
 
     public List<DateEntry> getHolidays() {
         return holidays;
-    }//end getHolidays
+    }
 
     public void add(HttpServletRequest request) {
         //The next id will be the size as the List is zero indexed
         DateEntry toAdd = new DateEntry(holidays.size(), request.getParameter("name"),
                 request.getParameter("desc"), request.getParameter("date"), Integer.parseInt(request.getParameter("same_day")));
         persist(toAdd);
-    }//end add
+    }
 
     public void update(HttpServletRequest request) {
         DateEntry update = holidays.get(Integer.parseInt(request.getParameter("id")) - 1);
@@ -48,7 +61,7 @@ public class Database {
         update.setHolidayDate(request.getParameter("date"));
         //update.setAlwaysOnSameDay(Integer.parseInt(request.getParameter("same_day")));
         persist(update);
-    }//end update
+    }
 
     public void print(JspWriter out) {
         try {
@@ -59,11 +72,11 @@ public class Database {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
 
-    }//end print
+    }
 
     public void findLongWeekend(HttpServletRequest request, JspWriter out) {
         SpecialHttpServletRequest newRequest = new SpecialHttpServletRequest(request);
-        newRequest.addParameter("endDate", "2013-12-31");
+        newRequest.addParameter("endDate", yearEnd());
         List<DateEntry> longweekend = findLongWeekend(newRequest, LONG_WEEKEND_AFTER);
         for(DateEntry d: longweekend){
             try {
@@ -72,7 +85,7 @@ public class Database {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
         }
-    }//end findLongWeekend
+    }
 
     public List findLongWeekend(HttpServletRequest request, int selector) {
         List<List<DateEntry>> allLongWeekends = new ArrayList<List<DateEntry>>();
@@ -89,7 +102,7 @@ public class Database {
             }
 	}
         //Remove duplicates due to the proximity of some holidays to each other
-        toTraverse = removeDuplicates(toTraverse);
+        //toTraverse = removeDuplicates(toTraverse);
         
         for(DateEntry current: toTraverse){
             List<DateEntry> longweekend = new ArrayList<DateEntry>();
@@ -119,6 +132,7 @@ public class Database {
                 allLongWeekends.add(longweekend);
             }
         }
+        removeIntersecting(allLongWeekends);
         
         switch(selector){
             case LONG_WEEKEND_BEFORE:
@@ -128,7 +142,7 @@ public class Database {
             default:
                 return Collections.EMPTY_LIST;
         }
-    }//end findLongWeekend
+    }
 
     //Priavte Methods
     private void persist(DateEntry d) {
@@ -136,11 +150,11 @@ public class Database {
         entityManger.persist(d);
         entityManger.getTransaction().commit();
         entityManger.close();
-    }//end persist
+    }
 
     private boolean isHoliday(DateEntry d) {
         return holidays.contains(d);
-    }//end isHoliday
+    }
 
     private boolean isWeekend(DateEntry d) {
         GregorianCalendar date = d.toGregorianCalendar();
@@ -154,7 +168,7 @@ public class Database {
             return true;
         }
         return false;
-    }//end isWeekend
+    }
 
     private boolean isMondayAfterHoliday(DateEntry d) {
         DateEntry previous = d.previousDate();
@@ -171,7 +185,7 @@ public class Database {
             return true;
         }
         return false;
-    }//end isMondayAfterHoliday
+    }
 
     private ArrayList<Object> isHolidayColliding(DateEntry d) {
         /*Info on data returned by this method
@@ -209,7 +223,7 @@ public class Database {
         }
         collision.add(false);
         return collision;
-    }//end isHolidayColliding
+    }
     
     private DateEntry getStartDate(DateEntry d){
         GregorianCalendar date = d.toGregorianCalendar();
@@ -218,8 +232,9 @@ public class Database {
         else if(date.get(GregorianCalendar.DAY_OF_WEEK) == GregorianCalendar.MONDAY)
             return d.previousDate().previousDate();//Set the date to the saturday
         return d;//Tuesday-Saturday
-    }//end getStartDate
+    }
     
+    //Not need for now since removeIntercting fixes the same problem
     private List<DateEntry> removeDuplicates(List<DateEntry> list){
         //Conver the list to a map which can only have one copy of a key
         //holidayDate is used since it the property that indicates a duplicate
@@ -230,5 +245,30 @@ public class Database {
         //Convert the map back to a list to be used
         List<DateEntry> newList = new ArrayList<DateEntry>(map.values());
         return newList;
-    }//end removeDuplicates
+    }
+    
+    public void removeIntersecting(List<List<DateEntry>> list) {
+        //Assumes that the first contains all the elements 
+        for(int i = 1; i < list.size(); i++){
+            List<DateEntry> list1 = list.get(i-1), list2 = list.get(i);
+            if(listIntersect(list1, list2)){
+                list.remove(i);
+                i = 1;
+            }
+        }
+    }
+    
+    public boolean listIntersect(List<DateEntry> list1, List<DateEntry> list2) {
+        for(DateEntry d: list2){
+            if(list1.contains(d)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String yearEnd() {
+        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+        return String.format("%d-12-31", calendar.get(GregorianCalendar.YEAR));
+    }
 }
