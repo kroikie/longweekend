@@ -37,7 +37,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
     private String holidayDate;
     @Column(name = "alwaysOnSameDay")
     private Integer alwaysOnSameDay;
-    private transient String link;
 
     public transient static final int ALWAYS_ON_SAME_DAY = 1;
     
@@ -50,7 +49,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
         holidayDesc = desc;
         holidayDate = date;
         alwaysOnSameDay = aosd;
-        createLink();
     }
 
     //Constuctor to take in user's dates
@@ -65,7 +63,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     public void setId(Integer id) {
         this.id = id;
-        createLink();
     }
 
     public String getHolidayName() {
@@ -74,7 +71,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     public void setHolidayName(String holidayName) {
         this.holidayName = holidayName;
-        createLink();
     }
 
     public String getHolidayDesc() {
@@ -83,7 +79,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     public void setHolidayDesc(String holidayDesc) {
         this.holidayDesc = holidayDesc;
-        createLink();
     }
 
     public String getHolidayDate() {
@@ -92,7 +87,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     public void setHolidayDate(String holidayDate) {
         this.holidayDate = holidayDate;
-        createLink();
     }
 
     public Integer getAlwaysOnSameDay() {
@@ -101,7 +95,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     public void setAlwaysOnSameDay(Integer alwaysOnSameDay) {
         this.alwaysOnSameDay = alwaysOnSameDay;
-        createLink();
     }
     //</editor-fold>
 
@@ -163,7 +156,7 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
     
     public DateEntry nextYear() {
         String date = String.format("%d-%02d-%02d", getYear()+1, getMonth(), getDay());
-        return new DateEntry(id, holidayName, holidayDesc, date, alwaysOnSameDay);
+        return new DateEntry(-1, holidayName, holidayDesc, date, alwaysOnSameDay);
     }
 
     public GregorianCalendar toGregorianCalendar() {
@@ -195,11 +188,6 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
         return false;
     }
 
-    private void createLink() {
-        link = String.format("<a href=\"editData.jsp?id=%d&name=%s&desc=%s&date=%s&same_day=%d\">%s</a>",
-                id, holidayName, holidayDesc, holidayDate, alwaysOnSameDay, holidayName);
-    }
-
     //Overriden Methods
     @Override
     public int hashCode() {
@@ -223,8 +211,12 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     @Override
     public String toString() {
-        if (link == null) {
-            createLink();
+        String link;
+        if(id != -1){
+            link = String.format("<a href=\"editData.jsp?id=%d&name=%s&desc=%s&date=%s&same_day=%d\">%s</a>",
+                id, holidayName, holidayDesc, holidayDate, alwaysOnSameDay, holidayName);
+        }else{
+            link = holidayName;
         }
         return String.format("Holiday Name: %s Holiday Desc: %s Holiday Date: %s AlwaysOnSameDay: %d",
                 link, holidayDesc, holidayDate, alwaysOnSameDay);

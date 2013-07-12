@@ -66,7 +66,8 @@ public class Database {
     public void print(JspWriter out) {
         try {
             for (DateEntry d : holidays) {
-                out.print(d + "<br/>");
+                if(d.getId() != -1)
+                    out.print(d + "<br/>");
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -135,9 +136,9 @@ public class Database {
         removeIntersecting(allLongWeekends);
         
         switch(selector){
-            case LONG_WEEKEND_BEFORE:
-                return allLongWeekends.get(0);
             case LONG_WEEKEND_AFTER:
+                return allLongWeekends.get(0);
+            case LONG_WEEKEND_BEFORE:
                 return allLongWeekends.get(allLongWeekends.size()-1);
             default:
                 return Collections.EMPTY_LIST;
