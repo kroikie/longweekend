@@ -1,0 +1,36 @@
+/* 
+    Document   : index
+    Created on : Jul 19, 2013, 10:49:14 AM
+    Author     : Jonathan
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body{
+    background-color: #EFEFEF;
+}
+
+a{
+    color: #08C;
+}
+
+#nav, #display{
+    position: absolute;
+    top: 5%;
+}
+
+#nav{
+    left: 2%;
+}
+
+#list{
+    list-style-type: none;
+}
+
+#display{
+    border: 1px solid silver;
+    left: 15%;
+    min-height: 40%;
+    min-width: 40%;
+}
+

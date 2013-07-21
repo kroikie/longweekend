@@ -9,12 +9,8 @@
         <servlet-class>publicholidays.HolidaysBetween</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LongWeekendBefore</servlet-name>
-        <servlet-class>publicholidays.LongWeekendBefore</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>LongWeekendAfter</servlet-name>
-        <servlet-class>publicholidays.LongWeekendAfter</servlet-class>
+        <servlet-name>LongWeekend</servlet-name>
+        <servlet-class>publicholidays.LongWeekend</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HolidaysFrom</servlet-name>
@@ -25,12 +21,8 @@
         <url-pattern>/HolidaysBetween</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>LongWeekendBefore</servlet-name>
-        <url-pattern>/LongWeekendBefore</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LongWeekendAfter</servlet-name>
-        <url-pattern>/LongWeekendAfter</url-pattern>
+        <servlet-name>LongWeekend</servlet-name>
+        <url-pattern>/LongWeekend</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

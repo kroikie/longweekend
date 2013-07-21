@@ -1,10 +1,8 @@
+
 package publicholidays;
 
-import entity.DateEntry;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +14,7 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-public class HolidaysFrom extends HttpServlet {
+public class LongWeekend extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -32,28 +30,15 @@ public class HolidaysFrom extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        DateEntry start = new DateEntry(request.getParameter("startDate")),
-                end = new DateEntry(yearEnd());
-        Database database = new Database();
-        List<DateEntry> list = database.getHolidays();
-        List<DateEntry> holidaysFrom = new ArrayList<DateEntry>();
-        String yearEnd = yearEnd();
         try {
-            for(DateEntry d: list){
-                if(d.compareTo(start) >= 0 && d.compareTo(end) <= 0){
-                   holidaysFrom.add(d);
-                }
-            }
-            JSONArray jsonArray = new JSONArray(holidaysFrom);
-            jsonArray.write(out);
+            Database database = new Database();
+            int selector = Integer.parseInt(request.getParameter("selector"));
+            List longWeekendAfter = database.findLongWeekend(request, selector);
+            JSONArray jsonAray = new JSONArray(longWeekendAfter);
+            jsonAray.write(out);
         } finally {            
             out.close();
         }
-    }
-    
-    private String yearEnd() {
-        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
-        return String.format("%d-12-31", calendar.get(GregorianCalendar.YEAR));
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

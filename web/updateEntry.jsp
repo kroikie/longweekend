@@ -1,9 +1,3 @@
-<%-- 
-    Document   : editData
-    Created on : Jan 16, 2013, 5:23:29 PM
-    Author     : Jonathan
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,7 +6,7 @@
         <title>Update Entry</title>
     </head>
     <body>
-        <form action="updateData.jsp" method="GET">
+        <form action="_updateData.jsp" method="GET">
             Holiday ID: <input type="text" name="id" value="<%out.print(request.getParameter("id"));%>"/>
             Holiday Name: <input type="text" name="name" value="<%out.print(request.getParameter("name"));%>"/>
             Holiday Description: <input type="text" name="desc" value="<%out.print(request.getParameter("desc"));%>"/>

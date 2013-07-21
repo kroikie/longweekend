@@ -3,7 +3,6 @@ package publicholidays;
 import entity.DateEntry;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TreeMap;
@@ -75,19 +74,6 @@ public class Database {
 
     }
 
-    public void findLongWeekend(HttpServletRequest request, JspWriter out) {
-        SpecialHttpServletRequest newRequest = new SpecialHttpServletRequest(request);
-        newRequest.addParameter("endDate", yearEnd());
-        List<DateEntry> longweekend = findLongWeekend(newRequest, LONG_WEEKEND_AFTER);
-        for(DateEntry d: longweekend){
-            try {
-                out.print(d + "<br/>");
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-            }
-        }
-    }
-
     public List findLongWeekend(HttpServletRequest request, int selector) {
         List<List<DateEntry>> allLongWeekends = new ArrayList<List<DateEntry>>();
         String startDate = request.getParameter("startDate");
@@ -136,12 +122,12 @@ public class Database {
         removeIntersecting(allLongWeekends);
         
         switch(selector){
-            case LONG_WEEKEND_AFTER:
-                return allLongWeekends.get(0);
             case LONG_WEEKEND_BEFORE:
                 return allLongWeekends.get(allLongWeekends.size()-1);
+            case LONG_WEEKEND_AFTER:
+                return allLongWeekends.get(0);
             default:
-                return Collections.EMPTY_LIST;
+                return allLongWeekends.get(0);
         }
     }
 
@@ -268,8 +254,5 @@ public class Database {
         return false;
     }
 
-    private String yearEnd() {
-        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
-        return String.format("%d-12-31", calendar.get(GregorianCalendar.YEAR));
-    }
+    
 }

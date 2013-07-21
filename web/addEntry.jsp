@@ -1,9 +1,3 @@
-<%-- 
-    Document   : addToDatabase
-    Created on : Jan 16, 2013, 10:23:53 AM
-    Author     : Jonathan
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,7 +6,7 @@
         <title>Add to Database</title>
     </head>
     <body>
-        <form action="addEntry.jsp" method="GET">
+        <form action="_addEntry.jsp" method="GET">
             Holiday Name: <input type="text" name="name"/>
             Holiday Description: <input type="text" name="desc"/>
             Holiday Date: <input type="text" name="date"/>

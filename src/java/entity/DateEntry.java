@@ -108,7 +108,7 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
                 lastMonth = 12;
                 day = 31;
                 year--;
-            } else if (lastMonth == 1 || lastMonth == 3 || lastMonth == 5 || lastMonth == 7 || lastMonth == 10) {
+            } else if (lastMonth == 1 || lastMonth == 3 || lastMonth == 5 || lastMonth == 7 || lastMonth ==8 || lastMonth == 10) {
                 day = 31;
             } else if (lastMonth == 4 || lastMonth == 6 || lastMonth == 9 || lastMonth == 11) {
                 isLastMonth = true;
@@ -129,7 +129,7 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
     public DateEntry nextDate() {
         int year = getYear(), month = getMonth(), day = getDay() + 1;
 
-        if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 10 || month == 12) && day > 31) {
+        if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day > 31) {
             month++;
             day = 01;
         } else if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
