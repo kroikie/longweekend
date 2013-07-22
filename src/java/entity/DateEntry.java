@@ -108,7 +108,7 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
                 lastMonth = 12;
                 day = 31;
                 year--;
-            } else if (lastMonth == 1 || lastMonth == 3 || lastMonth == 5 || lastMonth == 7 || lastMonth ==8 || lastMonth == 10) {
+            } else if (lastMonth == 1 || lastMonth == 3 || lastMonth == 5 || lastMonth == 7 || lastMonth == 8 || lastMonth == 10) {
                 day = 31;
             } else if (lastMonth == 4 || lastMonth == 6 || lastMonth == 9 || lastMonth == 11) {
                 isLastMonth = true;
