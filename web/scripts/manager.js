@@ -1,5 +1,5 @@
 var xmlHttp = createXMLHTTPObject();
-var display = document.getElementById("results");
+var results = document.getElementById("results");
 
 function createXMLHTTPObject() {
     if (window.XMLHttpRequest)
@@ -19,9 +19,9 @@ function displayInfo() {
     if (xmlHttp.readyState === 4) {
         if (xmlHttp.status === 200) {
             var json = JSON.parse(xmlHttp.responseText);
-            display.innerHTML = "";
+            results.innerHTML = "";
             json.forEach(function(holiday) {
-                display.innerHTML += "Holiday Name: " + holiday.holidayName +
+                results.innerHTML += "Holiday Name: " + holiday.holidayName +
                         " Date: " + holiday.holidayDate +
                         " Desc: " + holiday.holidayDesc + "<br/>";
             });
@@ -30,7 +30,7 @@ function displayInfo() {
 }
 
 function validate(date){
-  return date.match('\\d{4}-\\d{2}-\\d{2}');  
+  return date.match('\\d{4}-\\d{2}-\\d{2}') ? true : false;  
 }
 
 var app = angular.module("longWeekend", []);
@@ -38,15 +38,15 @@ app.config(function ($routeProvider) {
     $routeProvider
             .when('/longWeekend', {
         controller: 'longweekendController',
-        templateUrl: 'longWeekend.html'
+        templateUrl: 'partials/longWeekend.html'
     })
             .when('/holidaysFrom', {
         controller: 'longweekendController',
-        templateUrl: 'holidaysFrom.html'
+        templateUrl: 'partials/holidaysFrom.html'
     })
             .when('/holidaysBetween', {
         controller: 'longweekendController',
-        templateUrl: 'holidaysBetween.html'
+        templateUrl: 'partials/holidaysBetween.html'
     })
             .otherwise({redirectTo: '/longWeekend'});
 });
@@ -65,7 +65,7 @@ app.controller("longweekendController", function($scope) {
         selector: "0",
         process: function() {
             if(!validate($scope.longWeekend.date)){
-                display.innerHTML = "Enter a valid start date\n\
+                results.innerHTML = "Enter a valid start date\n\
                 Format: YYYY-MM-DD";
                 return;
             }
@@ -83,7 +83,7 @@ app.controller("longweekendController", function($scope) {
         startDate: "",
         process: function() {
             if(!validate($scope.holidaysFrom.startDate)){
-                display.innerHTML = "Enter a valid start date\n\
+                results.innerHTML = "Enter a valid start date\n\
                 Format: YYYY-MM-DD";
                return; 
             }
@@ -96,12 +96,12 @@ app.controller("longweekendController", function($scope) {
         endDate: "",
         process: function() {
             if(!validate($scope.holidaysBetween.startDate) || !validate($scope.holidaysBetween.endDate)){
-                display.innerHTML = "";
+                results.innerHTML = "";
                 if(!validate($scope.holidaysBetween.startDate))
-                    display.innerHTML += "Enter a valid start date \n\
+                    results.innerHTML += "Enter a valid start date \n\
                     Format: YYYY-MM-DD<br/>";
                 if(!validate($scope.holidaysBetween.endDate))
-                    display.innerHTML += "Enter a valid end date \n\
+                    results.innerHTML += "Enter a valid end date \n\
                     Format: YYYY-MM-DD";
                 return;
             }

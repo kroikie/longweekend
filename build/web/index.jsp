@@ -8,7 +8,7 @@
     <%
         String mode = request.getParameter("mode");
         if(mode != null && mode.equals("dev")){
-            response.sendRedirect("dev.jsp");
+            response.sendRedirect("dev.jsp?mode=dev");
         }
     %>
     <body ng-controller="longweekendController">
