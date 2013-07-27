@@ -3,9 +3,9 @@ package publicholidays;
 import entity.DateEntry;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TreeMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -13,6 +13,8 @@ import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.swing.JOptionPane;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Database {
 
@@ -74,10 +76,11 @@ public class Database {
 
     }
 
-    public List findLongWeekend(HttpServletRequest request, int selector) {
+    public List findLongWeekend(HttpServletRequest request) {
         List<List<DateEntry>> allLongWeekends = new ArrayList<List<DateEntry>>();
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
+        getUserDates(request);
         
         //Set up a list of possible long weekend candidates
         List<DateEntry> toTraverse = new ArrayList<DateEntry>();
@@ -87,9 +90,7 @@ public class Database {
                 //Get the first possible day in a long weekend
                 toTraverse.add(getStartDate(d));
             }
-	}
-        //Remove duplicates due to the proximity of some holidays to each other
-        //toTraverse = removeDuplicates(toTraverse);
+	}        
         
         for(DateEntry current: toTraverse){
             List<DateEntry> longweekend = new ArrayList<DateEntry>();
@@ -121,6 +122,7 @@ public class Database {
         }
         removeIntersecting(allLongWeekends);
         
+        int selector = Integer.parseInt(request.getParameter("selector"));
         switch(selector){
             case LONG_WEEKEND_BEFORE:
                 return allLongWeekends.get(allLongWeekends.size()-1);
@@ -221,19 +223,6 @@ public class Database {
         return d;//Tuesday-Saturday
     }
     
-    //Not need for now since removeIntercting fixes the same problem
-    private List<DateEntry> removeDuplicates(List<DateEntry> list){
-        //Conver the list to a map which can only have one copy of a key
-        //holidayDate is used since it the property that indicates a duplicate
-        TreeMap<String, DateEntry> map = new TreeMap<String, DateEntry>();
-        for(DateEntry d: list){
-            map.put(d.getHolidayDate(), d);
-        }
-        //Convert the map back to a list to be used
-        List<DateEntry> newList = new ArrayList<DateEntry>(map.values());
-        return newList;
-    }
-    
     public void removeIntersecting(List<List<DateEntry>> list) {
         //Assumes that the first contains all the elements 
         for(int i = 1; i < list.size(); i++){
@@ -254,5 +243,20 @@ public class Database {
         return false;
     }
 
-    
+    private void getUserDates(HttpServletRequest request){
+        String userDatesJSON = request.getParameter("userDates");
+        if(userDatesJSON == null || userDatesJSON.isEmpty())
+            return;
+        
+        JSONArray userDates = new JSONArray(userDatesJSON);
+        for(int i = 0;i < userDates.length(); i++){
+            JSONObject jsonObject = userDates.getJSONObject(i);
+            DateEntry add = new DateEntry(jsonObject.getString("date"));
+            add.setHolidayName(jsonObject.getString("name"));
+            add.setHolidayDesc(jsonObject.getString("desc"));
+            holidays.add(add);
+        }
+        
+        Collections.sort(holidays);
+    }
 }

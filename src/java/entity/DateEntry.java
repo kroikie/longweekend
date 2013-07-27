@@ -41,6 +41,9 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
     public transient static final int ALWAYS_ON_SAME_DAY = 1;
     
     public DateEntry() {
+        id = -1;
+        holidayName = holidayDate = holidayDesc = "";
+        alwaysOnSameDay = 0;
     }
 
     public DateEntry(int id, String name, String desc, String date, int aosd) {
