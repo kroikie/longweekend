@@ -37,7 +37,6 @@ public class HolidaysFrom extends HttpServlet {
         Database database = new Database();
         List<DateEntry> list = database.getHolidays();
         List<DateEntry> holidaysFrom = new ArrayList<DateEntry>();
-        String yearEnd = yearEnd();
         try {
             for(DateEntry d: list){
                 if(d.compareTo(start) >= 0 && d.compareTo(end) <= 0){

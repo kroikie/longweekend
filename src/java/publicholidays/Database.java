@@ -42,6 +42,7 @@ public class Database {
         }
         holidays.addAll(nextYearHolidays);
         holidays.addAll(yearAfterNextHolidays);
+        Collections.sort(holidays);
     }
 
     public List<DateEntry> getHolidays() {
@@ -49,6 +50,8 @@ public class Database {
     }
 
     public void add(HttpServletRequest request) {
+        //This needs to modified to account for the fact that more holidays are being added for the next years
+        //Need a way to get the next non -1 id holiday to add properly
         //The next id will be the size as the List is zero indexed
         DateEntry toAdd = new DateEntry(holidays.size(), request.getParameter("name"),
                 request.getParameter("desc"), request.getParameter("date"), Integer.parseInt(request.getParameter("same_day")));
@@ -56,11 +59,9 @@ public class Database {
     }
 
     public void update(HttpServletRequest request) {
-        DateEntry update = holidays.get(Integer.parseInt(request.getParameter("id")) - 1);
-        update.setHolidayName(request.getParameter("name"));
-        update.setHolidayDesc(request.getParameter("desc"));
-        update.setHolidayDate(request.getParameter("date"));
-        //update.setAlwaysOnSameDay(Integer.parseInt(request.getParameter("same_day")));
+        DateEntry update = new DateEntry(Integer.parseInt(request.getParameter("id")),
+                 request.getParameter("name"),request.getParameter("desc"), request.getParameter("date"),
+                 Integer.parseInt(request.getParameter("same_day")));
         persist(update);
     }
 
