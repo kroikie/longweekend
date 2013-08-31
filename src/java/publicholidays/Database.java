@@ -121,7 +121,8 @@ public class Database {
         }
         removeIntersecting(allLongWeekends);
         
-        int selector = Integer.parseInt(request.getParameter("selector"));
+        String s = request.getParameter("selector");
+        int selector =  s != null ? Integer.parseInt(s) : LONG_WEEKEND_AFTER;
         switch(selector){
             case LONG_WEEKEND_BEFORE:
                 return allLongWeekends.get(allLongWeekends.size()-1);
