@@ -117,9 +117,7 @@ public class Database {
                 longweekend.add(current);
                 current = current.nextDate();
             }
-            if (!longweekend.isEmpty()) {
-                allLongWeekends.add(longweekend);
-            }
+            allLongWeekends.add(longweekend);
         }
         removeIntersecting(allLongWeekends);
         
