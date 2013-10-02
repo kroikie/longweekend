@@ -215,7 +215,7 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
     public String toString() {
         String link;
         if(id != -1){
-            link = String.format("<a href=\"editData.jsp?id=%d&name=%s&desc=%s&date=%s&same_day=%d\">%s</a>",
+            link = String.format("<a href=\"updateEntry.jsp?id=%d&name=%s&desc=%s&date=%s&same_day=%d\">%s</a>",
                 id, holidayName, holidayDesc, holidayDate, alwaysOnSameDay, holidayName);
         }else{
             link = holidayName;

@@ -9,7 +9,7 @@
     <body>
 
         <%
-            String mode = request.getParameter("mode");
+            String mode = request.getParameter("key");
             if (mode == null || !mode.equals("dev")) {
                 response.sendRedirect("index.jsp");
             }

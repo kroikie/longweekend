@@ -32,8 +32,8 @@ public class LongWeekend extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             Database database = new Database();
-            List longWeekendAfter = database.findLongWeekend(request);
-            JSONArray jsonAray = new JSONArray(longWeekendAfter);
+            List longWeekend = database.findLongWeekend(request);
+            JSONArray jsonAray = new JSONArray(longWeekend);
             jsonAray.write(out);
         } finally {            
             out.close();

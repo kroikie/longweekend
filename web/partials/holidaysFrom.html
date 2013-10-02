@@ -1,6 +1,9 @@
 <form>
     Start Date: 
-    <input type="text" ng-model="holidaysFrom.startDate" placeholder="YYYY-MM-DD"/>
+    <input id="startDate" type="text" placeholder="YYYY-MM-DD" readonly/>
+    <img src="scripts/cal/cal.gif" 
+                 onclick="NewCssCal('startDate', 'yyyyMMdd', 'dropdown');" 
+                 style="cursor:pointer"/>
     <button ng-click="holidaysFrom.process();">Get Holidays From</button>
 </form>
 

@@ -23,12 +23,14 @@ public class Database {
     
     private EntityManager entityManger;
     private List<DateEntry> holidays;
+    private int nextId;
 
     public Database() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("holidays");
         entityManger = factory.createEntityManager();
         Query query = entityManger.createNamedQuery("DateEntry.findAll", DateEntry.class);
         holidays = query.getResultList();
+        nextId = holidays.get(holidays.size() - 1).getId() + 1;
         
         //Modifing the list to add the hoidays that are on the same day each year
         List<DateEntry> nextYearHolidays = new ArrayList<DateEntry>(), 
@@ -50,18 +52,29 @@ public class Database {
     }
 
     public void add(HttpServletRequest request) {
-        //This needs to modified to account for the fact that more holidays are being added for the next years
-        //Need a way to get the next non -1 id holiday to add properly
-        //The next id will be the size as the List is zero indexed
-        DateEntry toAdd = new DateEntry(holidays.size(), request.getParameter("name"),
-                request.getParameter("desc"), request.getParameter("date"), Integer.parseInt(request.getParameter("same_day")));
+        String  name = request.getParameter("name"), 
+                desc = request.getParameter("desc"),
+                date = request.getParameter("date"), 
+                same_day = request.getParameter("same_day");
+        
+        if(name == null || desc== null || same_day == null) return;
+        
+        DateEntry toAdd = new DateEntry(nextId, name, desc, date, Integer.parseInt(same_day));
         persist(toAdd);
     }
 
     public void update(HttpServletRequest request) {
-        DateEntry update = new DateEntry(Integer.parseInt(request.getParameter("id")),
-                 request.getParameter("name"),request.getParameter("desc"), request.getParameter("date"),
-                 Integer.parseInt(request.getParameter("same_day")));
+        String  id = request.getParameter("id"), 
+                name = request.getParameter("name"), 
+                desc = request.getParameter("desc"),
+                date = request.getParameter("date"), 
+                same_day = request.getParameter("same_day");
+        
+        if(id == null || name == null || desc== null || same_day == null) return;
+        
+        DateEntry update = new DateEntry(Integer.parseInt(id),
+                 name ,desc, date,
+                 Integer.parseInt(same_day));
         persist(update);
     }
 
@@ -101,7 +114,7 @@ public class Database {
                     longweekend.add((DateEntry) collision.get(1));//Add the first colliding date
                     longweekend.add((DateEntry) collision.get(2));//Add the second colliding date
                     DateEntry next = (DateEntry) collision.get(2);
-                    current = next.nextDate();//Get the next date to modify
+                    current = next.nextDate();//Get the nextId date to modify
                     current.setHolidayName("Honorary Date");
                     current.setHolidayDesc("Honorary Date");
                     longweekend.add(current);
@@ -198,7 +211,7 @@ public class Database {
             for (int innerCounter = 1; innerCounter < holidaySet.size(); innerCounter++) {
                 next = holidaySet.get(innerCounter);
 
-                //If the date is the samebut different names you get the next day
+                //If the date is the samebut different names you get the nextId day
                 if (current.getHolidayDate().equals(next.getHolidayDate())
                         && !current.getHolidayName().equals(next.getHolidayName())) {
                     if (d.getHolidayDate().equals(current.getHolidayDate())) {

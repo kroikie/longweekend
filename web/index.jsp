@@ -5,12 +5,6 @@
         <title>Long Weekend</title>
         <link rel="stylesheet" href="styles/index.css"/>
     </head>
-    <%
-        String mode = request.getParameter("mode");
-        if(mode != null && mode.equals("dev")){
-            response.sendRedirect("dev.jsp?mode=dev");
-        }
-    %>
     <body ng-controller="longweekendController">
         <div id="nav">
             <ul id="list">
@@ -26,6 +20,7 @@
         
         
         <script src="scripts/angular.min.js"></script>
+        <script src="scripts/datetimepicker_css.js"></script>
         <script src="scripts/manager.js"></script>
     </body>
 </html>

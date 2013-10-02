@@ -1,6 +1,9 @@
 <form>
     Date: 
-    <input type="text" ng-model="longWeekend.date" placeholder="YYYY-MM-DD"/>
+    <input id="date" type="text" placeholder="YYYY-MM-DD" readonly/>
+    <img src="scripts/cal/cal.gif" 
+                 onclick="NewCssCal('date', 'yyyyMMdd', 'dropdown');" 
+                 style="cursor:pointer"/>
     Long Weekends Before: 
     <input type="radio" ng-model="longWeekend.selector" value="0" />
     Long Weekends After: 

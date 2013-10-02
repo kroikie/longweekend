@@ -1,8 +1,14 @@
 <form>
     Start Date: 
-    <input type="text" ng-model="holidaysBetween.startDate" placeholder="YYYY-MM-DD"/>
+    <input id="startDate" type="text" placeholder="YYYY-MM-DD" readonly/>
+    <img src="scripts/cal/cal.gif" 
+                 onclick="NewCssCal('startDate', 'yyyyMMdd', 'dropdown');" 
+                 style="cursor:pointer"/>
     End Date: 
-    <input type="text" ng-model="holidaysBetween.endDate" placeholder="YYYY-MM-DD"/>
+    <input id="endDate" type="text" placeholder="YYYY-MM-DD" readonly/>
+    <img src="scripts/cal/cal.gif" 
+                 onclick="NewCssCal('endDate', 'yyyyMMdd', 'dropdown');" 
+                 style="cursor:pointer"/>
     <button ng-click="holidaysBetween.process();">Get Holidays Between</button> 
 </form>
 
