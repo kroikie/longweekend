@@ -1,4 +1,4 @@
-package entity;
+package com.foohyfooh.publicholidays.entity;
 
 import java.io.Serializable;
 import java.util.GregorianCalendar;
@@ -134,21 +134,21 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
         if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day > 31) {
             month++;
-            day = 01;
+            day = 1;
             if (month == 13) {
                 year++;
-                month = 01;
+                month = 1;
             }
         } else if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
             month++;
-            day = 01;
+            day = 1;
         } else if (month == 2) {
             if (isLeapYear(year) && day > 29) {
                 month++;
-                day = 01;
+                day = 1;
             } else if (day > 28) {
                 month++;
-                day = 01;
+                day = 1;
             }
         }
 
@@ -168,15 +168,15 @@ public class DateEntry implements Serializable, Comparable<DateEntry> {
 
     //Private Methods
     private int getYear() {
-        return Integer.parseInt(holidayDate.substring(0, 4));
+        return Integer.parseInt(holidayDate.split("-")[0]);
     }
 
     private int getMonth() {
-        return Integer.parseInt(holidayDate.substring(5, 7));
+        return Integer.parseInt(holidayDate.split("-")[1]);
     }
 
     private int getDay() {
-        return Integer.parseInt(holidayDate.substring(8));
+        return Integer.parseInt(holidayDate.split("-")[2]);
     }
 
     private boolean isLeapYear(int y) {

@@ -1,8 +1,9 @@
+package com.foohyfooh.publicholidays;
 
-package publicholidays;
-
+import com.foohyfooh.publicholidays.entity.DateEntry;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +15,7 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-public class LongWeekend extends HttpServlet {
+public class HolidaysBetween extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -29,15 +30,20 @@ public class LongWeekend extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            Database database = new Database();
-            List longWeekend = database.findLongWeekend(request);
-            JSONArray jsonAray = new JSONArray(longWeekend);
-            jsonAray.write(out);
-        } finally {            
-            out.close();
-        }
+        DateEntry start = new DateEntry(request.getParameter("startDate"));
+        DateEntry end = new DateEntry(request.getParameter("endDate"));
+        Database database = new Database();
+        List<DateEntry> list = database.getHolidays();
+        List<DateEntry> holidaysBetween = new ArrayList<>();
+        try (PrintWriter out = response.getWriter()) {
+            for(DateEntry d: list){
+                if(d.compareTo(start) >= 0 && d.compareTo(end) <= 0){
+                   holidaysBetween.add(d);
+                }
+            }
+            JSONArray jsonArray = new JSONArray(holidaysBetween);
+            jsonArray.write(out);
+        } 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

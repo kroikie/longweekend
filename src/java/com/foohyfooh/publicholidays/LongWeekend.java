@@ -1,10 +1,8 @@
-package publicholidays;
 
-import entity.DateEntry;
+package com.foohyfooh.publicholidays;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +14,7 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-public class HolidaysFrom extends HttpServlet {
+public class LongWeekend extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -31,28 +29,12 @@ public class HolidaysFrom extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        DateEntry start = new DateEntry(request.getParameter("startDate")),
-                end = new DateEntry(yearEnd());
-        Database database = new Database();
-        List<DateEntry> list = database.getHolidays();
-        List<DateEntry> holidaysFrom = new ArrayList<DateEntry>();
-        try {
-            for(DateEntry d: list){
-                if(d.compareTo(start) >= 0 && d.compareTo(end) <= 0){
-                   holidaysFrom.add(d);
-                }
-            }
-            JSONArray jsonArray = new JSONArray(holidaysFrom);
-            jsonArray.write(out);
-        } finally {            
-            out.close();
+        try (PrintWriter out = response.getWriter()) {
+            Database database = new Database();
+            List longWeekend = database.findLongWeekend(request);
+            JSONArray jsonAray = new JSONArray(longWeekend);
+            jsonAray.write(out);
         }
-    }
-    
-    private String yearEnd() {
-        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
-        return String.format("%d-12-31", calendar.get(GregorianCalendar.YEAR));
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

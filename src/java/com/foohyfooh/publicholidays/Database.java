@@ -1,18 +1,19 @@
-package publicholidays;
+package com.foohyfooh.publicholidays;
 
-import entity.DateEntry;
+import com.foohyfooh.publicholidays.entity.DateEntry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,9 +22,9 @@ public class Database {
     public static final int LONG_WEEKEND_BEFORE = 0;
     public static final int LONG_WEEKEND_AFTER = 1;
     
-    private EntityManager entityManger;
-    private List<DateEntry> holidays;
-    private int nextId;
+    private final EntityManager entityManger;
+    private final List<DateEntry> holidays;
+    private final int nextId;
 
     public Database() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("holidays");
@@ -33,8 +34,8 @@ public class Database {
         nextId = holidays.get(holidays.size() - 1).getId() + 1;
         
         //Modifing the list to add the hoidays that are on the same day each year
-        List<DateEntry> nextYearHolidays = new ArrayList<DateEntry>(), 
-                yearAfterNextHolidays = new ArrayList<DateEntry>();
+        List<DateEntry> nextYearHolidays = new ArrayList<>(), 
+                yearAfterNextHolidays = new ArrayList<>();
         for(DateEntry d: holidays){
             if(d.getAlwaysOnSameDay() == DateEntry.ALWAYS_ON_SAME_DAY){
                 DateEntry nextYearVersion = d.nextYear();
@@ -85,19 +86,19 @@ public class Database {
                     out.print(d + "<br/>");
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, e);
         }
 
     }
 
     public List findLongWeekend(HttpServletRequest request) {
-        List<List<DateEntry>> allLongWeekends = new ArrayList<List<DateEntry>>();
+        List<List<DateEntry>> allLongWeekends = new ArrayList<>();
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         getUserDates(request);
         
         //Set up a list of possible long weekend candidates
-        List<DateEntry> toTraverse = new ArrayList<DateEntry>();
+        List<DateEntry> toTraverse = new ArrayList<>();
 	for(DateEntry d: holidays){
             if(startDate.compareTo(d.getHolidayDate()) <= 0 
                             && endDate.compareTo(d.getHolidayDate()) >= 0 ){
@@ -107,7 +108,7 @@ public class Database {
 	}        
         
         for(DateEntry current: toTraverse){
-            List<DateEntry> longweekend = new ArrayList<DateEntry>();
+            List<DateEntry> longweekend = new ArrayList<>();
             while (isHoliday(current) || isWeekend(current) || isMondayAfterHoliday(current)) {
                 ArrayList<Object> collision = isHolidayColliding(current);
                 if ((Boolean) collision.get(0)) {
@@ -198,13 +199,13 @@ public class Database {
          */
         
         //Reducing the amount of holidays to check for collision
-        ArrayList<DateEntry> holidaySet = new ArrayList<DateEntry>();
+        ArrayList<DateEntry> holidaySet = new ArrayList<>();
         for(DateEntry c: holidays){
             if(d.compareTo(d) >= 0){
                 holidaySet.add(c);
             }
         }
-        ArrayList<Object> collision = new ArrayList<Object>();
+        ArrayList<Object> collision = new ArrayList<>();
         DateEntry current, next;
         for (int outerCounter = 0; outerCounter < holidaySet.size(); outerCounter++) {
             current = holidaySet.get(outerCounter);

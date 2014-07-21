@@ -1,4 +1,4 @@
-<%@page import="publicholidays.Database"%>
+<%@page import="com.foohyfooh.publicholidays.Database"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -11,7 +11,6 @@
             Database database = new Database();
             database.update(request);
             response.sendRedirect("dev.jsp");
-            
         %>
     </body>
 </html>

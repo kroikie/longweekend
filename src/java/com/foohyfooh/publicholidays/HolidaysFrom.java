@@ -1,9 +1,10 @@
-package publicholidays;
+package com.foohyfooh.publicholidays;
 
-import entity.DateEntry;
+import com.foohyfooh.publicholidays.entity.DateEntry;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +16,7 @@ import org.json.JSONArray;
  *
  * @author Jonathan
  */
-public class HolidaysBetween extends HttpServlet {
+public class HolidaysFrom extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -30,23 +31,25 @@ public class HolidaysBetween extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        DateEntry start = new DateEntry(request.getParameter("startDate"));
-        DateEntry end = new DateEntry(request.getParameter("endDate"));
+        DateEntry start = new DateEntry(request.getParameter("startDate")),
+                end = new DateEntry(yearEnd());
         Database database = new Database();
         List<DateEntry> list = database.getHolidays();
-        List<DateEntry> holidaysBetween = new ArrayList<DateEntry>();
-        try {
+        List<DateEntry> holidaysFrom = new ArrayList<>();
+        try (PrintWriter out = response.getWriter()) {
             for(DateEntry d: list){
                 if(d.compareTo(start) >= 0 && d.compareTo(end) <= 0){
-                   holidaysBetween.add(d);
+                   holidaysFrom.add(d);
                 }
             }
-            JSONArray jsonArray = new JSONArray(holidaysBetween);
+            JSONArray jsonArray = new JSONArray(holidaysFrom);
             jsonArray.write(out);
-        } finally {            
-            out.close();
-        }
+        } 
+    }
+    
+    private String yearEnd() {
+        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+        return String.format("%d-12-31", calendar.get(GregorianCalendar.YEAR));
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

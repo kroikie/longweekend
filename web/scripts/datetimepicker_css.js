@@ -62,7 +62,7 @@ var ThemeBg = "";//Background image of Calendar window.
 var PrecedeZero = true;//Preceding zero [true|false]
 var MondayFirstDay = false;//true:Use Monday as first day; false:Sunday as first day. [true|false]  //added in version 1.7
 var UseImageFiles = false;//Use image files with "arrows" and "close" button
-var imageFilesPath = "cal/";
+var imageFilesPath = "scripts/cal/";
 //Configurable parameters end
 
 //use the Month and Weekday in your preferred language.

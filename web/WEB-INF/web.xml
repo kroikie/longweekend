@@ -2,15 +2,15 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <servlet>
         <servlet-name>HolidaysFrom</servlet-name>
-        <servlet-class>publicholidays.HolidaysFrom</servlet-class>
+        <servlet-class>com.foohyfooh.publicholidays.HolidaysFrom</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HolidaysBetween</servlet-name>
-        <servlet-class>publicholidays.HolidaysBetween</servlet-class>
+        <servlet-class>com.foohyfooh.publicholidays.HolidaysBetween</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LongWeekend</servlet-name>
-        <servlet-class>publicholidays.LongWeekend</servlet-class>
+        <servlet-class>com.foohyfooh.publicholidays.LongWeekend</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HolidaysFrom</servlet-name>
